@@ -61,8 +61,12 @@ function callTodos(){
 					const results = await response.json();
 					   		
 					results.map((item)=>{
-					
-						insertTodoInDB(item.userId,item.id,item.title,'publish',item.completed);
+						var bool_todo = 0;
+						
+						if(item.completed==true)
+							bool_todo = 1;
+
+						insertTodoInDB(item.userId,item.id,item.title,'publish',bool_todo);
 
 					});
 

@@ -37,10 +37,11 @@ function welcome_todo_list ( $content ) {
     return $content .= '<h3 class="text-center">Welcome in TODO List</h3>';
 }
 
-add_action( 'admin_menu', 'todo_menu' );
-add_action( 'the_content', 'todo_list_datatable' );
+//add_action( 'admin_menu', 'todo_menu' );
+//add_action( 'the_content', 'todo_list_datatable' );
 
-//add_shortcode( 'todo_table', 'todo_list_datatable');
+
+add_shortcode( 'todo_table', 'todo_list_datatable');
 
 function todo_menu() {
 	add_options_page( 'TodoList Options', 'Todo List Settings', 'manage_options', 'todo-plugin-options', 'todo_list_options' );
@@ -48,12 +49,20 @@ function todo_menu() {
 
 function todo_list_datatable(){
 
-	?>
-		<hr>
-			<div class="row">
+	?>		<style>
+				#table_todos_completed tr td,.todo_completed {
+					text-decoration: line-through!important;
+				}
+				.todo_plugin_container{
+					text-align: center;
+					margin: 0 auto;
+				}
+			</style>
+			<div class="row todo_plugin_container">
 				   <div class="col-md-12 col-sm-12 col-xs-12">
-				   <h2>Dynamic Pills</h2>
-					<p>To make the tabs toggleable, add the data-toggle="pill" attribute to each link. Then add a .tab-pane class with a unique ID for every tab and wrap them inside a div element with class .tab-content.</p>
+				   <h1>TODO List</h1>
+				   <h2>What are you still doing for today?</h2>
+					<p>Check what you have done or you have to do...</p>
 					<ul class="nav nav-pills">
 						<li class="active"><a data-toggle="pill" href="#home">All todos</a></li>
 						<li><a data-toggle="pill" href="#menu1">Completed Todos</a></li>
@@ -72,12 +81,12 @@ function todo_list_datatable(){
 										<?php
 											global $wpdb,$table_prefix;
 
-											$sql_check = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish'";
-											$results = $wpdb->get_results($sql_check,ARRAY_A);	
+											$sql_all_todos = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish'";
+											$results_all_todos = $wpdb->get_results($sql_all_todos,ARRAY_A);	
 											
-											foreach($results as $value){
+											foreach($results_all_todos as $value){
 												?>
-												<tr>
+												<tr class="<?php if($value['completed'] === "1") { echo "todo_completed"; }  ?>">
 													<td><?php echo $value['ID'] ?></td>
 													<td><?php echo $value['post_author'] ?></td>
 													<td><?php echo $value['post_title'] ?></td>
@@ -109,10 +118,10 @@ function todo_list_datatable(){
 								<?php
 									global $wpdb,$table_prefix;
 
-									$sql_check = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish' AND completed = 'true'";
-									$results = $wpdb->get_results($sql_check,ARRAY_A);	
+									$sql_completed_todos = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish' AND completed = '1'";
+									$results_completed_todos = $wpdb->get_results($sql_completed_todos,ARRAY_A);	
 									
-									foreach($results as $value){
+									foreach($results_completed_todos as $value){
 										?>
 										<tr>
 											<td><?php echo $value['ID'] ?></td>
@@ -121,11 +130,7 @@ function todo_list_datatable(){
 											<td><?php echo $value['post_status'] ?></td>
 											<td><?php echo $value['post_type'] ?></td>
 											<td>
-												<?php if($value['completed']==0||$value['completed']==false): ?>
-												<input type='checkbox'/>
-												<?php else: ?>
 												<input type='checkbox' checked/>
-												<?php endif; ?>
 											</td>
 										</tr>
 										<?php
@@ -136,8 +141,8 @@ function todo_list_datatable(){
 						</table>	
 						</div>
 						<div id="menu2" class="tab-pane fade">
-							<h3>PENDING TODOS</h3>
-							<table class="table table-condesed" id="table_todos_completed">
+							<h3>PENDING Todos</h3>
+							<table class="table table-condesed" id="table_todos_pending">
 							<thead>
 								<tr><th>ID_User</th><th>ID</th><th>Title</th><th>Status</th><th>Type</th><th>Completed</th></tr>
 							</thead>
@@ -146,23 +151,19 @@ function todo_list_datatable(){
 								<?php
 									global $wpdb,$table_prefix;
 
-									$sql_check = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish' AND completed = 0;";
+									$sql_check = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish' AND (completed = 0 OR completed = 'false');";
 									$results = $wpdb->get_results($sql_check,ARRAY_A);	
 									
 									foreach($results as $value){
 										?>
-										<tr>
+										<tr class="trow_pending_<?php echo $value['ID']; ?>">
 											<td><?php echo $value['ID'] ?></td>
 											<td><?php echo $value['post_author'] ?></td>
-											<td><?php echo $value['post_title'] ?></td>
+											<td><strong><?php echo $value['post_title'] ?></strong><p><?php echo $value['post_excerpt'] ?></p></td>
 											<td><?php echo $value['post_status'] ?></td>
 											<td><?php echo $value['post_type'] ?></td>
 											<td>
-												<?php if($value['completed']==0||$value['completed']==false): ?>
-												<input type='checkbox'/>
-												<?php else: ?>
-												<input type='checkbox' checked/>
-												<?php endif; ?>
+												<input type='checkbox' onclick="markAsDone(<?php echo $value['ID']; ?>);"/>
 											</td>
 										</tr>
 										<?php
@@ -188,6 +189,30 @@ function todo_list_datatable(){
 				$("#table_todos_completed").DataTable();
 				$("#table_todos_pending").DataTable();
 			});
+			function markAsDone(id){
+				$.ajax(	
+				{	
+					url: "<?php echo  admin_url( 'admin-ajax.php' ); ?>",
+					type:"POST",
+					dataType:"text",
+					data:"action=check_todo_as_completed&id="+id, 
+					success: function(result){
+						var get_row = $(".trow_pending_"+id).html();
+						console.log(get_row);
+						$("#table_todos_completed tbody").prepend("<tr class='todo_completed'>"+get_row+"</tr>").find("input").prop("checked",true);
+						$("#table_todos tbody").prepend("<tr class='todo_completed'>"+get_row+"</tr>").find("input").prop("checked",true);
+						$(".trow_pending_"+id).hide();
+
+					},
+					error:function(){
+				
+					
+					},
+					complete:function(){
+						
+					}
+			});
+			}
 		</script>
 	<?php
 }
@@ -331,6 +356,7 @@ function insert_todo_in_db(){
 	if($conta==0){
 		$query = "INSERT INTO ".$table_prefix."posts (ID, post_author, post_title, post_status, post_type, completed) VALUES ('".$id."', '".$idUser."', '".$title."','".$status."','todo','".$status_todo."')";
 		$check = $wpdb->query($query);
+		echo $query;
 	}
 
 	exit();
@@ -359,5 +385,20 @@ function get_all_todos(){
 	
 	header('Content-Type: application/json');
 	echo json_encode($todos);
+	exit();
+}
+
+add_action('wp_ajax_check_todo_as_completed', 'check_todo_as_completed');
+add_action('wp_ajax_nopriv_check_todo_as_completed', 'check_todo_as_completed');
+
+function check_todo_as_completed(){
+	
+	global $wpdb,$table_prefix;
+	
+	$id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
+	$sql_complete_todo = "UPDATE ".$table_prefix."posts SET completed = '1' WHERE ID = '".$id."';";
+	$wpdb->query($sql_complete_todo);
+	echo $sql_complete_todo;
+	return true;
 	exit();
 }

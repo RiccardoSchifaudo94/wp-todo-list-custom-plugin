@@ -21,7 +21,7 @@
 	$todo_table = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."posts");
 	//Add column if not present.
 	if(!isset($todo_table->completed)){
-		$wpdb->query("ALTER TABLE ".$wpdb->prefix."posts ADD completed TEXT NOT NULL DEFAULT false");
+		$wpdb->query("ALTER TABLE ".$wpdb->prefix."posts ADD completed BOOLEAN DEFAULT FALSE");
 	}
 
 ?>
