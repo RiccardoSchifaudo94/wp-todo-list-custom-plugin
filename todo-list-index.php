@@ -37,9 +37,7 @@ function welcome_todo_list ( $content ) {
     return $content .= '<h3 class="text-center">Welcome in TODO List</h3>';
 }
 
-//add_action( 'admin_menu', 'todo_menu' );
-//add_action( 'the_content', 'todo_list_datatable' );
-
+add_action( 'admin_menu', 'todo_menu' );
 
 add_shortcode( 'todo_table', 'todo_list_datatable');
 
