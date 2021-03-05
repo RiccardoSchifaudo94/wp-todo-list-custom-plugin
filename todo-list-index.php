@@ -31,7 +31,7 @@ function installer(){
 }
 register_activation_hook(__file__, 'installer');
 
-add_action( 'the_content', 'welcome_todo_list' );
+//add_action( 'the_content', 'welcome_todo_list' );
 
 function welcome_todo_list ( $content ) {
     return $content .= '<h3 class="text-center">Welcome in TODO List</h3>';
