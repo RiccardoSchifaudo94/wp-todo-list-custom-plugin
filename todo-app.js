@@ -20,7 +20,6 @@ $(document).ready(function(){
 });
 
 $(document).ajaxStop(function () {
-	// 0 === $.active
 	$(".loader_bkg").hide();
 	$(".wrap").removeClass("opacity-0");
 	$("#success_load_api_rest").show();

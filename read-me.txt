@@ -1,0 +1,7 @@
+1# - Copy plugin folder in "wp-content/plugins",
+2# - Activate Todo List Plugin from plugins' section
+3# - Go in Settings > Todo List Settings
+4# - Insert URL Endpoint -> https://jsonplaceholder.typicode.com/todos and press "Fetch"
+5# - Wait end of loading procedure;
+6# - TODO LIST -> Add todo to add new task or view all in table for crud operations
+7# - Insert shortcode [todo_table] in post, article or page to call Table of Todos in the front end.

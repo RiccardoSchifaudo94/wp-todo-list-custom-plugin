@@ -398,7 +398,6 @@ function check_todo_as_completed(){
 	$id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
 	$sql_complete_todo = "UPDATE ".$table_prefix."posts SET completed = '1' WHERE ID = '".$id."';";
 	$wpdb->query($sql_complete_todo);
-	echo $sql_complete_todo;
 	return true;
 	exit();
 }
