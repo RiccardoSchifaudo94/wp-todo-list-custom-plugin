@@ -66,8 +66,6 @@ function callTodos(){
 
 					});
 
-					//console.log(getAllTodosFromDb()) ;
-					//$("#table_todos").DataTable();
 			} catch (error) {
 					$("#error_url").show();	
 			}
@@ -109,7 +107,6 @@ function getAllTodosFromDb(){
 			data:"action=get_all_todos",
 		   	success: function(result){
 				result.map((item)=>{
-					$("#table_todos tbody").append("<tr><td>"+item.userId+"</td><td>"+item.id+"</td><td>"+item.title+"</td><td>"+item.completed+"</td></tr>");
 					todos_json.push(item);
 				});
   			}

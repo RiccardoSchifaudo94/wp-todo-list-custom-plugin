@@ -359,6 +359,5 @@ function get_all_todos(){
 	
 	header('Content-Type: application/json');
 	echo json_encode($todos);
-	//echo $todos;
 	exit();
 }
