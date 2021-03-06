@@ -92,7 +92,7 @@ function todo_list_datatable(){
 								<div class="table-responsive">
 									<table class="table table-condesed" id="table_todos">
 										<thead>
-											<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Status</th><th>Type</th><th>Completed</th></tr>
+											<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Completed</th></tr>
 										</thead>
 										<tbody>
 											
@@ -108,8 +108,6 @@ function todo_list_datatable(){
 														<td><?php echo $value['ID'] ?></td>
 														<td><?php echo $value['post_author'] ?></td>
 														<td><strong><?php echo $value['post_title'] ?></strong><p><?php echo $value['post_excerpt'] ?></p></td>
-														<td><?php echo $value['post_status'] ?></td>
-														<td><?php echo $value['post_type'] ?></td>
 														<td>
 															<?php if($value['completed']==0||$value['completed']==false): ?>
 															<input type='checkbox' onclick="markAsDone(<?php echo $value['ID']; ?>);"/>
@@ -131,7 +129,7 @@ function todo_list_datatable(){
 						<div class="table-responsive">
 								<table class="table table-condesed" id="table_todos_completed">
 									<thead>
-										<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Status</th><th>Type</th><th>Completed</th></tr>
+										<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Completed</th></tr>
 									</thead>
 									<tbody>
 										
@@ -147,8 +145,6 @@ function todo_list_datatable(){
 													<td><?php echo $value['ID'] ?></td>
 													<td><?php echo $value['post_author'] ?></td>
 													<td><strong><?php echo $value['post_title'] ?></strong><p><?php echo $value['post_excerpt'] ?></p></td>
-													<td><?php echo $value['post_status'] ?></td>
-													<td><?php echo $value['post_type'] ?></td>
 													<td>
 														<input type='checkbox' checked/>
 													</td>
@@ -166,7 +162,7 @@ function todo_list_datatable(){
 							<div class="table-responsive">
 								<table class="table table-condesed" id="table_todos_pending">
 									<thead>
-										<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Status</th><th>Type</th><th>Completed</th></tr>
+										<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Completed</th></tr>
 									</thead>
 									<tbody>
 										
@@ -182,8 +178,6 @@ function todo_list_datatable(){
 													<td><?php echo $value['ID'] ?></td>
 													<td><?php echo $value['post_author'] ?></td>
 													<td><strong><?php echo $value['post_title'] ?></strong><p><?php echo $value['post_excerpt'] ?></p></td>
-													<td><?php echo $value['post_status'] ?></td>
-													<td><?php echo $value['post_type'] ?></td>
 													<td>
 														<input type='checkbox' onclick="markAsDone(<?php echo $value['ID']; ?>);"/>
 													</td>
