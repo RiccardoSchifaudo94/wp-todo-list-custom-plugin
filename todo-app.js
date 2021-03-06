@@ -3,7 +3,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		
 		if(isURL($("#uri_json").val()))
-			callTodos();
+			saveUrlEndpointAPI();
 		else
 			$("#error_url").show();	
 	
@@ -26,34 +26,30 @@ $(document).ajaxStop(function () {
 });
   
 
-function callTodos(){
+function saveUrlEndpointAPI(){
 	
 	const uri = document.querySelector("#uri_json");
-	
+
 	$(".loader_bkg").show();
 	$(".wrap").addClass("opacity-0");
-	$.ajax(	
-		{	
+	
+	$.ajax(	{	
 			url: "admin-ajax.php",
 			type:"POST",
 			dataType:"text",
 			data:"action=save_url_endpoint&uri_json="+encodeURIComponent($("#uri_json").val()), 
 		   	success: function(result){
-    			
-
   			},
 			complete:function(){
-				
 			},
 			error:function(){
 				$("#error_url").show();	
-
 			}
   	});
 
 
 
-	getAllTasks = async () => {
+	getTodosFromAPI = async () => {
 							    
 			try {
 					const response = await fetch(uri.value);
@@ -74,13 +70,12 @@ function callTodos(){
 			}
   	};
 
-  	getAllTasks(); 
+  	getTodosFromAPI(); 
 }
 
 function insertTodoInDB(idUser,idTodos,title,status,statusTodo){
 
-	$.ajax(	
-		{	
+	$.ajax({	
 			url: "admin-ajax.php",
 			type:"POST",
 			dataType:"text",
@@ -90,33 +85,10 @@ function insertTodoInDB(idUser,idTodos,title,status,statusTodo){
   			},
 			error:function(){
 				$("#error_url").show();	
-			
 			},
 			complete:function(){
-				
 			}
   	});
-}
-
-function getAllTodosFromDb(){
-	
-	var todos_json = new Array();
-	$.ajax(	
-		{	
-			url: "admin-ajax.php",
-			type:"POST",
-			dataType:"json",
-			async:true,
-			data:"action=get_all_todos",
-		   	success: function(result){
-				result.map((item)=>{
-					todos_json.push(item);
-				});
-  			}
-		}
-	);
-	
-	return todos_json;
 }
 
 function isURL(str) {

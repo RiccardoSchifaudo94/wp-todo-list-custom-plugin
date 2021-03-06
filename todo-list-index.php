@@ -33,13 +33,6 @@ function installer(){
 }
 register_activation_hook(__file__, 'installer');
 
-//add_action( 'the_content', 'todo_list_datatable' );
-
-function welcome_todo_list ( $content ) {
-     $content .= '<h3 class="text-center">Welcome in TODO List</h3>';
-	 return $content;
-}
-
 add_action( 'admin_menu', 'todo_menu' );
 
 add_shortcode( 'todo-table', 'todo_list_datatable');
@@ -51,198 +44,192 @@ function todo_menu() {
 function todo_list_datatable(){
 
 	?>		
-	<div class="todo_plugin_container">
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
-			<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap.min.css"></link>
-			<style>
-				#table_todos_completed tr td,.todo_completed {
-					text-decoration: line-through!important;
-				}
-				#table_todos strong, #table_todos_completed strong, #table_todos_pending strong{
-					font-size:14px;
-				}
-				#table_todos p, #table_todos_completed p, #table_todos_pending p{
-					font-size:10px;
-				}
-				.todo_plugin_container{
-					text-align: center;
-					margin: 0 auto;
-					display: block;
-					background-color: #f1f1f1;
-					box-shadow: 3px 4px 15px #b5b5b5;
-					padding: 20px;
-					border-radius: 10px;
-					border-bottom: 5px solid #6f6e6e;
-				}
-			</style>
-			<div class="row">
-				   <div class="col-md-12 col-sm-12 col-xs-12">
-				   <h1>TODO List</h1>
-				   <h2>What are you still doing for today?</h2>
-					<p>Check what you have done or you have to do...</p>
-					<ul class="nav nav-pills">
-						<li class="active"><a data-toggle="pill" href="#home">All todos</a></li>
-						<li><a data-toggle="pill" href="#menu1">Completed Todos</a></li>
-						<li><a data-toggle="pill" href="#menu2">Pending Todos</a></li>
-					</ul>
-					
-					<div class="tab-content">
-						<div id="home" class="tab-pane fade in active">
-								<h3>ALL Todos</h3>
-								<div class="table-responsive">
-									<table class="table table-condesed" id="table_todos">
-										<thead>
-											<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Completed</th></tr>
-										</thead>
-										<tbody>
-											
-											<?php
-												global $wpdb,$table_prefix;
-
-												$sql_all_todos = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish'";
-												$results_all_todos = $wpdb->get_results($sql_all_todos,ARRAY_A);	
-												
-												foreach($results_all_todos as $value){
-													?>
-													<tr class="<?php if($value['completed'] === "1") { echo "todo_completed"; }?> trow_all_<?php echo $value['ID']; ?>">
-														<td><?php echo $value['ID'] ?></td>
-														<td><?php echo $value['post_author'] ?></td>
-														<td><strong><?php echo $value['post_title'] ?></strong><p><?php echo $value['post_excerpt'] ?></p></td>
-														<td>
-															<?php if($value['completed']==0||$value['completed']==false): ?>
-															<input type='checkbox' onclick="markAsDone(<?php echo $value['ID']; ?>);"/>
-															<?php else: ?>
-															<input type='checkbox' checked/>
-															<?php endif; ?>
-														</td>
-													</tr>
-													<?php
-												}
-
-											?>
-										</tbody>
-									</table>
-							</div>	
-						</div>
-						<div id="menu1" class="tab-pane fade">
-						<h3>COMPLETED Todos</h3>
-						<div class="table-responsive">
-								<table class="table table-condesed" id="table_todos_completed">
-									<thead>
-										<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Completed</th></tr>
-									</thead>
-									<tbody>
-										
-										<?php
-											global $wpdb,$table_prefix;
-
-											$sql_completed_todos = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish' AND completed = '1'";
-											$results_completed_todos = $wpdb->get_results($sql_completed_todos,ARRAY_A);	
-											
-											foreach($results_completed_todos as $value){
-												?>
-												<tr>
-													<td><?php echo $value['ID'] ?></td>
-													<td><?php echo $value['post_author'] ?></td>
-													<td><strong><?php echo $value['post_title'] ?></strong><p><?php echo $value['post_excerpt'] ?></p></td>
-													<td>
-														<input type='checkbox' checked/>
-													</td>
-												</tr>
-												<?php
-											}
-
-										?>
-									</tbody>
-								</table>
-							</div>	
-						</div>
-						<div id="menu2" class="tab-pane fade">
-							<h3>PENDING Todos</h3>
-							<div class="table-responsive">
-								<table class="table table-condesed" id="table_todos_pending">
-									<thead>
-										<tr><th>ID</th><th>ID_User</th><th>Title</th><th>Completed</th></tr>
-									</thead>
-									<tbody>
-										
-										<?php
-											global $wpdb,$table_prefix;
-
-											$sql_check = "SELECT * FROM ".$table_prefix."posts WHERE post_type='todo' AND post_status='publish' AND (completed = 0 OR completed = 'false');";
-											$results = $wpdb->get_results($sql_check,ARRAY_A);	
-											
-											foreach($results as $value){
-												?>
-												<tr class="trow_pending_<?php echo $value['ID']; ?>">
-													<td><?php echo $value['ID'] ?></td>
-													<td><?php echo $value['post_author'] ?></td>
-													<td><strong><?php echo $value['post_title'] ?></strong><p><?php echo $value['post_excerpt'] ?></p></td>
-													<td>
-														<input type='checkbox' onclick="markAsDone(<?php echo $value['ID']; ?>);"/>
-													</td>
-												</tr>
-												<?php
-											}
-
-										?>
-									</tbody>
-							</table>	
-							</div>
-						</div>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
+	<style type="text/css">
+		.nav-pills{
+			padding: 20px;
+			margin-bottom: 50px;
+		}
+		.flex-grid{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			align-content: center;
+		}
+		#completed_todos tr td,.todo_completed {
+			text-decoration: line-through!important;
+		}
+		.todo_plugin_container{
+			text-align: center;
+			margin: 0 auto;
+			display: block;
+			background-color: #f1f1f1;
+			box-shadow: 3px 4px 15px #b5b5b5;
+			padding: 20px;
+			border-radius: 10px;
+			border-bottom: 5px solid #6f6e6e;
+		}
+	</style>
+	<div class="container todo_plugin_container">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<ul class="nav nav-pills text-center flex-grid">
+					<li class="active"><a data-toggle="pill" href="#home">All todos</a></li>
+					<li><a data-toggle="pill" href="#menu1">Completed Todos</a></li>
+					<li><a data-toggle="pill" href="#menu2">Pending Todos</a></li>
+				</ul>
+				<div class="tab-content">
+					<div id="home" class="tab-pane fade in active">
+						<table id="all_todos" class="table" style="width:100%">
+					        <thead>
+					            <tr>
+					                <th>id</th>
+					                <th>userId</th>
+					                <th>title</th>
+					                <th>status</th>
+					            </tr>
+					        </thead>
+					        <tbody></tbody>
+					    </table>
 					</div>
-					
+					<div  id="menu1" class="tab-pane fade">
+					    <table id="completed_todos" class="table" style="width:100%">
+					        <thead>
+					            <tr>
+					                <th>id</th>
+					                <th>userId</th>
+					                <th>title</th>
+					                <th>status</th>
+					            </tr>
+					        </thead>
+					        <tbody></tbody>
+					    </table>
+					</div>
+					<div id="menu2" class="tab-pane fade">
+					    <table id="pending_todos" class="table" style="width:100%">
+					        <thead>
+					            <tr>
+					                <th>id</th>
+					                <th>userId</th>
+					                <th>title</th>
+					                <th>status</th>
+					            </tr>
+					        </thead>
+					        <tbody></tbody>
+					    </table>
+					</div>
 				</div>
 			</div>
 		</div>
-		<script
-  			src="https://code.jquery.com/jquery-3.6.0.min.js"
- 			integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
- 			crossorigin="anonymous"></script>
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-			<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>	
-			<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap.min.js"></script>
-			<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>						
-		<script>
-			$(document).ready(function(){
-				$("#table_todos").DataTable({
-    				responsive: true
-				} );
-				$("#table_todos_completed").DataTable({
-    				responsive: true
-				} );
-				$("#table_todos_pending").DataTable({
-    				responsive: true
-				} );
-			});
-			function markAsDone(id){
-				$.ajax(	
-				{	
-					url: "<?php echo  admin_url( 'admin-ajax.php' ); ?>",
-					type:"POST",
-					dataType:"text",
-					data:"action=check_todo_as_completed&id="+id, 
-					success: function(result){
-						var get_row = $(".trow_pending_"+id).html();
-						console.log(get_row);
-						$(".trow_all_"+id).hide();
-						$("#table_todos_completed tbody").prepend("<tr class='todo_completed'>"+get_row+"</tr>").find("input").first().prop("checked",true);
-						$("#table_todos tbody").prepend("<tr class='todo_completed'>"+get_row+"</tr>").find("input").first().prop("checked",true);
-						$(".trow_pending_"+id).hide();
+	</div>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>	
+	<script type="text/javascript">
+		
+			var all_todos = [];
+			var pending_todos = [];
+			var completed_todos = [];
 
-					},
-					error:function(){
+			const call = async() => {
 				
+				const req = await fetch("<?php echo admin_url( 'admin-ajax.php' )."?action=get_all_todos";?>");
+				const res = await req.json();
+				
+				all_todos = res;
+				pending_todos = res.filter((x)=>x.completed === '0');
+				completed_todos = res.filter((x)=>x.completed === '1');
+
+				all_todos.forEach((todo) => {
 					
-					},
-					complete:function(){
+					var html =  "";
 						
-					}
+						if(todo.completed=='0')
+							html += "<tr style='width:100%;' id='"+todo.id+"'>";
+						else
+							html += "<tr class='todo_completed' style='width:100%;' id='"+todo.id+"'>";
+
+						html += "<td>"+todo.id+"</td>";
+						html += "<td>"+todo.userId+"</td>";
+						html += "<td>"+todo.title+"</td>";
+						if(todo.completed==='0')
+							html += "<td><input type='checkbox' onclick='makeAsDone("+todo.id+")'></td>";
+						else
+							html += "<td><input type='checkbox' checked></td>";
+						html += "</tr>";
+
+					$("#all_todos tbody").append(html);
+
+				});
+
+				completed_todos.forEach((todo) => {
+					
+					var html =  "<tr style='width:100%;' id='"+todo.id+"'>";
+						html += "<td>"+todo.id+"</td>";
+						html += "<td>"+todo.userId+"</td>";
+						html += "<td>"+todo.title+"</td>";
+						html += "<td><input type='checkbox' checked></td>";
+						html += "</tr>";
+
+					$("#completed_todos tbody").append(html);
+			
+				});
+
+				pending_todos.forEach((todo) => {
+					
+					var html =  "<tr style='width:100%;' id='"+todo.id+"'>";
+						html += "<td>"+todo.id+"</td>";
+						html += "<td>"+todo.userId+"</td>";
+						html += "<td>"+todo.title+"</td>";
+						html += "<td><input type='checkbox' onclick='makeAsDone("+todo.id+")'></td>";
+						html += "</tr>";
+
+					$("#pending_todos tbody").append(html);
+
+				});
+				
+				$('#all_todos').DataTable();
+				$('#completed_todos').DataTable();
+				$('#pending_todos').DataTable();
+				
+			}		
+
+
+			function makeAsDone(id){
+							$.ajax(	
+							{	
+								url: "<?php echo  admin_url( 'admin-ajax.php' ); ?>",
+								type:"POST",
+								dataType:"text",
+								data:"action=check_todo_as_completed&id="+id, 
+								success: function(result){
+									var get_row = $("#all_todos tbody #"+id).html();
+									$("#all_todos tbody #"+id).addClass('todo_completed');
+									$("#pending_todos tbody #"+id).hide();
+									$("#completed_todos tbody ").prepend("<tr class='todo_completed'>"+get_row+"</tr>");
+									$("#completed_todos tbody #"+id).find("input").prop("checked",true);
+									location.reload();
+								},
+								error:function(){
+							
+								
+								},
+								complete:function(){
+									
+								}
+						});
+						}
+
+			$(document).ready(function(){
+				call();
 			});
-			}
-		</script>
-		</div>
+	</script>
+		
 	<?php
+
+	
 }
 
 function todo_list_options() {
