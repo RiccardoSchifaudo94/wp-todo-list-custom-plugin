@@ -29,7 +29,7 @@ $(document).ajaxStop(function () {
 function callTodos(){
 	
 	const uri = document.querySelector("#uri_json");
-	const table_body = document.querySelector("#table_todos tbody");
+	
 	$(".loader_bkg").show();
 	$(".wrap").addClass("opacity-0");
 	$.ajax(	
