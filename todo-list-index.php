@@ -190,9 +190,9 @@ function todo_list_datatable(){
 
 				});
 				
-				$('#all_todos').DataTable();
-				$('#completed_todos').DataTable();
-				$('#pending_todos').DataTable();
+				$('#all_todos').DataTable({"aaSorting": [[ 0, "desc" ]]});
+				$('#completed_todos').DataTable({"aaSorting": [[ 0, "desc" ]]});
+				$('#pending_todos').DataTable({"aaSorting": [[ 0, "desc" ]]});
 				
 			}		
 
