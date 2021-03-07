@@ -364,7 +364,7 @@ function insert_todo_in_db(){
 	
 	$conta = 0;	
 
-	$sql_check = $sql_check = "SELECT COUNT(*) as conta FROM ".$table_prefix."posts WHERE post_type='todo' AND post_title ='".$title."';";
+	$sql_check = "SELECT COUNT(*) as conta FROM ".$table_prefix."posts WHERE post_type='todo' AND post_title ='".$title."';";
 	$row = $wpdb->get_results($sql_check,ARRAY_A);
 	$conta = $row[0]['conta'];
 
